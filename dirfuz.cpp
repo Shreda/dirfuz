@@ -113,7 +113,7 @@ void dirfuz::BuildQueue()
         std::cerr << "Could not open wordlist";
     }
     wl.close();
-    std::cout << "finished reading file";
+    std::cout << "finished reading file" << std::endl;
 }
 
 /*
