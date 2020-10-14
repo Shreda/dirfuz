@@ -5,12 +5,6 @@ const std::string dirfuz::helpo("-h");
 const std::string dirfuz::wordlisto("-w");
 const std::string dirfuz::urlo("-u");
 
-//size_t WriteCallback(char* contents, size_t size, size_t nmemb, void* userp)
-//{
-//    ((std::string*)userp)->append((char*)contents, size * nmemb);
-//    return size * nmemb;
-//}
-
 static size_t write_cb(char* data, size_t n, size_t l, void* userp)
 {
     /* take care of the data here, ignored in this example */
@@ -64,7 +58,14 @@ void dirfuz::ProcessQueue()
             {
                 char* url;
                 CURL* e = this->msg->easy_handle;
+                long responseCode;
+
+                curl_easy_getinfo(this->msg->easy_handle, CURLINFO_RESPONSE_CODE, &responseCode);
                 curl_easy_getinfo(this->msg->easy_handle, CURLINFO_EFFECTIVE_URL, &url);
+
+                if (responseCode == 200) {
+                    std::cout << responseCode << " - " << url << std::endl;
+                }
                 //std::cerr << "R: " << msg->data.result << " - " << this->msg->data.result << " " << curl_easy_strerror(this->msg->data.result) << " " << url << std::endl;
                 curl_multi_remove_handle(this->curlm, e);
                 curl_easy_cleanup(e);
@@ -89,10 +90,8 @@ void dirfuz::ProcessQueue()
 }
 
 /*
-* Takes the base URL and a filename to generate a queue of
-* URLs to process.
-* @param url - base URL
-* @param wordlist - wordlist filename
+* Uses the base URL and wordlist to generate a queue of
+* URLs to be requested.
 */
 void dirfuz::BuildQueue()
 {
@@ -110,10 +109,9 @@ void dirfuz::BuildQueue()
     }
     else 
     {
-        std::cerr << "Could not open wordlist";
+        std::cerr << "Could not open wordlist.";
     }
     wl.close();
-    std::cout << "finished reading file" << std::endl;
 }
 
 /*
@@ -175,11 +173,8 @@ void dirfuz::ParseArgs(int argc, char* argv[])
 }
 
 int dirfuz::Run() {
-    // build URL queue
     this->BuildQueue();
-    // send requests and print results.
     this->ProcessQueue();
-    std::cout << "we made it" << std::endl;
     return 0;
 }
 
@@ -189,5 +184,3 @@ int main(int argc, char* argv[])
     p.ParseArgs(argc, argv);
     p.Run();
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
