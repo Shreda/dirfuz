@@ -65,7 +65,7 @@ void dirfuz::ProcessQueue()
                 char* url;
                 CURL* e = this->msg->easy_handle;
                 curl_easy_getinfo(this->msg->easy_handle, CURLINFO_EFFECTIVE_URL, &url);
-                std::cerr << "R: " << msg->data.result << " - " << this->msg->data.result << " " << curl_easy_strerror(this->msg->data.result) << " " << url << std::endl;
+                //std::cerr << "R: " << msg->data.result << " - " << this->msg->data.result << " " << curl_easy_strerror(this->msg->data.result) << " " << url << std::endl;
                 curl_multi_remove_handle(this->curlm, e);
                 curl_easy_cleanup(e);
             }
