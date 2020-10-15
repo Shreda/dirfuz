@@ -29,6 +29,7 @@ class dirfuz
         static void PrintUsage();
         void ParseArgs(int argc, char* argv[]);
         int Run();
+        void ProcessResponse(CURL* e);
         void BuildQueue();
         void ProcessQueue();
         void AddTransfer(std::string url);
