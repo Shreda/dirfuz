@@ -1,23 +1,11 @@
 
 #include "dirfuz.h"
 
-const std::string dirfuz::helpo("-h");
-const std::string dirfuz::wordlisto("-w");
-const std::string dirfuz::urlo("-u");
-
 static size_t write_cb(char* data, size_t n, size_t l, void* userp) {
     /* take care of the data here, ignored in this example */
     (void)data;
     (void)userp;
     return n * l;
-}
-
-void dirfuz::PrintUsage() {
-    std::cerr << "Usage:" << "\n" <<
-                "OPTIONS" << "\n" << 
-                "\t-h\tPrint usage.\n" <<
-                "\t-u\tURL to fuzz.\n" <<
-                "\t-w\tWordlist to use.\n";
 }
 
 void dirfuz::AddTransfer(std::string url) {
@@ -111,52 +99,22 @@ void dirfuz::ProcessResponse(CURL* e) {
     }
 }
 
-/*
-* Parses the command line arguments provided by the user
-* and sets application variables such as URL and wordlist
-* @param argc - number of arguments
-* @param argv - pointer to a list of character pointers.
-*         contains each arg passed on the command line
-*         seperated by whitspace.
-*/
-void dirfuz::ParseArgs(int argc, char* argv[]) {
-    if (argc <= 1) {
-        dirfuz::PrintUsage();
+void dirfuz::ParseOptions(cxxopts::Options* options, int argc, char* argv[]) {
+    cxxopts::ParseResult result = options->parse(argc, argv);
+
+    if (result.count("help")) {
+        std::cout << options -> help() << std::endl;
         exit(0);
     }
+    
+    else if ((result.count("url")) && (result.count("wordlist"))) {
+        this->url = result["url"].as<std::string>();
+        this->wordlist = result["wordlist"].as<std::string>();
+    }
 
-    for (int i = 0; i < argc; ++i) {
-        std::string arg = argv[i];
-        // help
-        if (arg.compare(helpo) == 0) {
-            dirfuz::PrintUsage();
-        }
-
-        // url
-        else if (arg.compare(urlo) == 0) {
-            //check there is still commandline to process.
-            if (i + 1 < argc) {
-                //move to next item in commandline
-                i++;
-                this -> url = argv[i];
-                std::cout << this -> url << std::endl;
-            }
-            else {
-                std::cerr << "No URL provided.";
-            }
-        }
-
-        // wordlist
-        else if (arg.compare(wordlisto) == 0) {
-            if (i + 1 < argc) {
-                i++;
-                this -> wordlist = argv[i];
-                std::cout << this -> wordlist << std::endl;
-            }
-            else {
-                std::cerr << "No wordlist provided." << std::endl;
-            }
-        }
+    else {
+        std::cout << options->help() << std::endl;
+        exit(0);
     }
 }
 
@@ -167,8 +125,8 @@ int dirfuz::Run() {
 }
 
 int main(int argc, char* argv[]) {
-    dirfuz p;
-    p.ParseArgs(argc, argv);
-    p.Run();
+    dirfuz p(argc, argv);
+    int code = p.Run();
+    return code;
 }
 

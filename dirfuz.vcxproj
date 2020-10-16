@@ -150,6 +150,7 @@
     <ClCompile Include="dirfuz.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cxxopts.h" />
     <ClInclude Include="dirfuz.h" />
     <ClInclude Include="queue.h" />
   </ItemGroup>
