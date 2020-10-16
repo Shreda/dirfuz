@@ -17,7 +17,6 @@ class dirfuz
                 ("m,maxparralel", "Maximum number of parallel requests to send at one time", cxxopts::value<int>()->default_value("20"))
                 ("h,help", "Print usage");
             this->ParseOptions(options, argc, argv);
-            this->Run(); 
         }
 
         // curl context

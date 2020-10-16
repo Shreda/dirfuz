@@ -95,7 +95,7 @@ void dirfuz::ProcessResponse(CURL* e) {
     else if (responseCode == 301 || responseCode == 302 || responseCode == 303) {
         char* redirect_url;
         curl_easy_getinfo(e, CURLINFO_REDIRECT_URL, &redirect_url);
-        std::cout << responseCode << " -> " << std::endl;
+        std::cout << responseCode << " -> " << redirect_url << std::endl;
     }
 }
 
