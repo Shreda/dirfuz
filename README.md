@@ -42,3 +42,8 @@ Usage:
                          time (default: 20)
   -h, --help             Print usage
 ```
+
+## Dependencies
+
+- libcurl - Because cURL is what you use when doing client side HTTP https://github.com/jarro2783/cxxopts.
+- cxxopts.h - Because it's easier than manually parsing cli args https://github.com/jarro2783/cxxopts.
