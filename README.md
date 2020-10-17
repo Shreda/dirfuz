@@ -21,3 +21,24 @@ dirfuz is a cross-platform, **single** threaded, directory brute force tool. As 
 ```
 g++ difuz.cpp -lcurl -o dirfuz
 ```
+
+- You probably want the binary on on your $PATH so move it somewhere. I usually do:
+
+```
+sudo mv dirfuz /usr/local/bin/
+```
+
+## Usage
+
+```
+$ dirfuz -h                                                                                         
+dirfuz - Simple and fast directory brute forcing.
+Usage:
+  dirfuz [OPTION...]
+
+  -u, --url arg          Base URL, for example https://www.example.com
+  -w, --wordlist arg     Wordlist to perform the brute force with
+  -m, --maxparralel arg  Maximum number of parallel requests to send at one
+                         time (default: 20)
+  -h, --help             Print usage
+```
