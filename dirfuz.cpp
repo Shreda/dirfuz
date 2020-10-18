@@ -21,9 +21,9 @@ void dirfuz::AddTransfer(std::string url) {
 void dirfuz::ProcessQueue() {
     curl_global_init(CURL_GLOBAL_ALL);
     this->curlm = curl_multi_init();
-    curl_multi_setopt(this->curlm, CURLMOPT_MAXCONNECTS, (long)10);
+    curl_multi_setopt(this->curlm, CURLMOPT_MAXCONNECTS, (long)this->maxParallel);
 
-    for (this->transfers = 0; this->transfers < 10; this->transfers++) {
+    for (this->transfers = 0; this->transfers < this->maxParallel; this->transfers++) {
         if (!this->urlQueue.Empty()) {
             this->AddTransfer(this->urlQueue.PopFront());
         }
@@ -100,7 +100,15 @@ void dirfuz::ProcessResponse(CURL* e) {
 }
 
 void dirfuz::ParseOptions(cxxopts::Options* options, int argc, char* argv[]) {
-    cxxopts::ParseResult result = options->parse(argc, argv);
+    cxxopts::ParseResult result;
+    options->allow_unrecognised_options();
+    try {
+        result = options->parse(argc, argv);
+    }
+    catch (...) {
+        std::cerr << "Error parsing commandline arguments. Check yourself, before you wreck yourself." << std::endl;
+        exit(1);
+    }
 
     if (result.count("help")) {
         std::cout << options -> help() << std::endl;
@@ -110,6 +118,7 @@ void dirfuz::ParseOptions(cxxopts::Options* options, int argc, char* argv[]) {
     else if ((result.count("url")) && (result.count("wordlist"))) {
         this->url = result["url"].as<std::string>();
         this->wordlist = result["wordlist"].as<std::string>();
+        this->maxParallel = result["maxparallel"].as<unsigned int>();
     }
 
     else {

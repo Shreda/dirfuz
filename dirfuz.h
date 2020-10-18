@@ -14,7 +14,7 @@ class dirfuz
             options->add_options()
                 ("u,url", "Base URL, for example https://www.example.com", cxxopts::value<std::string>())
                 ("w,wordlist", "Wordlist to perform the brute force with", cxxopts::value<std::string>())
-                ("m,maxparralel", "Maximum number of parallel requests to send at one time", cxxopts::value<int>()->default_value("20"))
+                ("m,maxparallel", "Maximum number of parallel requests to send at one time", cxxopts::value<unsigned int>()->default_value("20"))
                 ("h,help", "Print usage");
             this->ParseOptions(options, argc, argv);
         }
@@ -25,6 +25,7 @@ class dirfuz
         unsigned int transfers;
         int msgsLeft;
         int stillAlive;
+        unsigned int maxParallel;
         
         // queue of urls to process
         tsqueue<std::string> urlQueue;
